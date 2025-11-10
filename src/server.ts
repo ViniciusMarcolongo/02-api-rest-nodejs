@@ -1,17 +1,20 @@
 import fastify from "fastify";
 import { db } from "./database.js";
+import { env } from "./env/index.js";
 
 const app = fastify();
 
 app.get("/hello", async () => {
-  const tables = await db("sqlite_schema").select("*");
+  const transactions = await db("transactions")
+    .where("amount", 1000)
+    .select("*");
 
-  return tables;
+  return transactions;
 });
 
 app
   .listen({
-    port: 3333,
+    port: env.PORT,
   })
   .then(() => {
     console.log("HTTP Server Running!");
